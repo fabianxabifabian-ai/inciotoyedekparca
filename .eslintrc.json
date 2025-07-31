@@ -25,7 +25,6 @@
           "**/*.test.{ts,tsx}",
           "**/*.spec.{ts,tsx}",
           "**/jest.config.js",
-          "**/cypress/**/*",
           "**/tailwind.config.js",
           "**/next.config.js",
           "**/postcss.config.js"
@@ -55,14 +54,5 @@
         "project": "./tsconfig.json"
       }
     }
-  },
-  "overrides": [
-    {
-      "files": ["cypress/**/*"],
-      "extends": ["plugin:cypress/recommended"],
-      "env": {
-        "cypress/globals": true
-      }
-    }
-  ]
+  }
 } 
