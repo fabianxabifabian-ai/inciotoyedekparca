@@ -1,14 +1,5 @@
 {
-  "buildCommand": "npm run build && npm run sitemap",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "regions": ["fra1"],
-  "functions": {
-    "src/pages/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
+  "regions": ["iad1"],
   "headers": [
     {
       "source": "/(.*)",
@@ -64,12 +55,6 @@
       "source": "/home",
       "destination": "/",
       "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
     }
   ]
 } 
