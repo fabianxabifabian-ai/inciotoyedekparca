@@ -1,0 +1,176 @@
+// İnci Oto Yedek Parça - Admin Panel Database Schema
+// Advanced admin panel with Google Tag Manager, SEO, and analytics management
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin User Management
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String   
+  name        String?
+  role        Role     @default(ADMIN)
+  isActive    Boolean  @default(true)
+  lastLogin   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  createdCodes  AnalyticsCode[]
+  createdSeo    SeoSettings[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+// NextAuth.js Session Management
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// Analytics & Tracking Code Management
+model AnalyticsCode {
+  id          String        @id @default(cuid())
+  name        String        // "Google Tag Manager", "Google Analytics", "Facebook Pixel"
+  type        AnalyticsType
+  headCode    String?       @db.Text // <head> içine konulacak kod
+  bodyCode    String?       @db.Text // <body> başlangıcına konulacak kod
+  isActive    Boolean       @default(true)
+  priority    Int           @default(1) // Yükleme sırası
+  description String?       @db.Text
+  
+  // Meta data
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("analytics_codes")
+}
+
+// SEO Settings Management
+model SeoSettings {
+  id              String   @id @default(cuid())
+  pageType        String   // "homepage", "product", "global"
+  pageIdentifier  String?  // product slug, category name, etc.
+  
+  // Meta Tags
+  title           String?
+  description     String?  @db.Text
+  keywords        String?  @db.Text
+  ogTitle         String?
+  ogDescription   String?  @db.Text
+  ogImage         String?
+  ogType          String?  @default("website")
+  
+  // Twitter Cards
+  twitterCard     String?  @default("summary_large_image")
+  twitterTitle    String?
+  twitterDescription String? @db.Text
+  twitterImage    String?
+  
+  // Technical SEO
+  canonicalUrl    String?
+  robots          String?  @default("index,follow")
+  structuredData  Json?    // Schema.org JSON-LD
+  
+  // Status
+  isActive        Boolean  @default(true)
+  
+  // Meta data
+  createdById     String
+  createdBy       User     @relation(fields: [createdById], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([pageType, pageIdentifier])
+  @@map("seo_settings")
+}
+
+// System Configuration
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique // "site_name", "contact_email", "gtm_container_id"
+  value       String   @db.Text
+  type        SettingType @default(STRING)
+  category    String   @default("general") // "general", "analytics", "seo", "social"
+  description String?
+  isPublic    Boolean  @default(false) // Public ayarlar frontend'de kullanılabilir
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+// Analytics Reports (Future feature)
+model AnalyticsReport {
+  id          String   @id @default(cuid())
+  reportType  String   // "pageviews", "events", "conversions"
+  dateRange   String   // "today", "7days", "30days", "custom"
+  data        Json     // Report verileri
+  generatedAt DateTime @default(now())
+
+  @@map("analytics_reports")
+}
+
+// Content Management (Future feature)
+model ContentBlock {
+  id          String      @id @default(cuid())
+  key         String      @unique // "hero_title", "about_text", "contact_info"
+  content     String      @db.Text
+  contentType ContentType @default(TEXT)
+  isActive    Boolean     @default(true)
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("content_blocks")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum AnalyticsType {
+  GOOGLE_TAG_MANAGER
+  GOOGLE_ANALYTICS
+  FACEBOOK_PIXEL
+  GOOGLE_ADS
+  LINKEDIN_INSIGHT
+  TWITTER_PIXEL
+  CUSTOM
+}
+
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  EMAIL
+  URL
+}
+
+enum ContentType {
+  TEXT
+  HTML
+  MARKDOWN
+  JSON
+}

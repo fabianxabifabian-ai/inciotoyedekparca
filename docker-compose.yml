@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: inciotoyedekparca_db
+    restart: always
+    environment:
+      POSTGRES_DB: inciotoyedekparca
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: InciOto2024!
+      POSTGRES_HOST_AUTH_METHOD: md5
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - inci_network
+
+  # pgAdmin (Database Management Interface)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: inciotoyedekparca_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@inciotoyedekparca.com
+      PGADMIN_DEFAULT_PASSWORD: InciOto2024!
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - inci_network
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  inci_network:
+    driver: bridge 
