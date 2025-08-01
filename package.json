@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -15,7 +15,8 @@
     "test:ci": "jest --ci --coverage",
     "type-check": "tsc --noEmit",
     "sitemap": "next-sitemap",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "prisma generate"
   },
   "repository": {
     "type": "git",
