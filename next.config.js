@@ -18,6 +18,9 @@ const nextConfig = {
 
   // Compression
   compress: true,
+  
+  // Force rebuild
+  generateEtags: false,
 }
 
 module.exports = nextConfig 
