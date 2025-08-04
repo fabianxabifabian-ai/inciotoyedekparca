@@ -16,11 +16,19 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
   const [analyticsCodes, setAnalyticsCodes] = useState<AnalyticsCode[]>([]);
 
   useEffect(() => {
-    // Analytics kodlarını yükle
+    // Analytics kodlarını yükle (optional - production'da database gerekli)
     fetch('/api/analytics-codes')
-      .then(res => res.json())
-      .then(codes => setAnalyticsCodes(codes))
-      .catch(err => console.error('Analytics codes loading error:', err));
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error('Analytics API not available');
+      })
+      .then(codes => Array.isArray(codes) ? setAnalyticsCodes(codes) : setAnalyticsCodes([]))
+      .catch(err => {
+        console.warn('Analytics codes loading error:', err);
+        setAnalyticsCodes([]); // Fallback to empty array
+      });
   }, []);
 
   return (
