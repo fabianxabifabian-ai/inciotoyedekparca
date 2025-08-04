@@ -309,24 +309,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        {/* Agency Credit */}
-        <div className="border-t border-gray-700/20 py-4">
-          <div className="text-center">
-            <a
-              href="https://www.resulkorkmaz.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 text-gray-500 hover:text-blue-400 transition-all duration-300 text-sm"
-            >
-              <span className="group-hover:scale-110 transition-transform">🎨</span>
-              <span className="group-hover:underline">Web Tasarım: RK Dijital Reklam Ajansı</span>
-              <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </a>
-          </div>
-        </div>
       </div>
     </footer>
   );

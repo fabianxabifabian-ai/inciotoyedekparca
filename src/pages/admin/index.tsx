@@ -56,7 +56,7 @@ export default function AdminDashboard({ stats, recentCodes, session }: AdminDas
               
               <div className="flex items-center space-x-4">
                 <span className="text-gray-600">
-                  Hoşgeldin, {session.user.name}
+                  Hoşgeldin, {session?.user?.name || session?.user?.email || 'Admin'}
                 </span>
                 <button
                   onClick={handleSignOut}

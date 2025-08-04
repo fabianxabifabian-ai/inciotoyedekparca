@@ -17,7 +17,7 @@ export default function AnalyticsInjector({ analyticsCodes }: AnalyticsInjectorP
   // Body kodlarını inject et
   useEffect(() => {
     // Sadece aktif ve body kodu olan analytics kodlarını filtrele
-    const activeBodyCodes = analyticsCodes
+    const activeBodyCodes = (analyticsCodes || [])
       .filter(code => code.isActive && code.bodyCode)
       .sort((a, b) => a.priority - b.priority)
 
@@ -79,7 +79,7 @@ export default function AnalyticsInjector({ analyticsCodes }: AnalyticsInjectorP
   }, [analyticsCodes])
 
   // Head kodlarını Next.js Head component ile inject et
-  const activeHeadCodes = analyticsCodes
+  const activeHeadCodes = (analyticsCodes || [])
     .filter(code => code.isActive && code.headCode)
     .sort((a, b) => a.priority - b.priority)
 

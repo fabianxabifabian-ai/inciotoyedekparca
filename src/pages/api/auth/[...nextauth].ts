@@ -10,19 +10,37 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        username: { label: 'Username/Email', type: 'text' },
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Email ve şifre gerekli')
+        if (!credentials?.username || !credentials?.password) {
+          throw new Error('Kullanıcı adı ve şifre gerekli')
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
+        // Hem email hem username ile giriş yapabilmek için
+        let user = null;
+        
+        // Önce email olarak ara
+        if (credentials.username.includes('@')) {
+          user = await prisma.user.findUnique({
+            where: {
+              email: credentials.username
+            }
+          })
+        }
+        
+        // Email bulunamazsa veya username girilmişse, admin user kontrolü yap
+        if (!user) {
+          // rslkrkmz username'i için özel kontrol
+          if (credentials.username === 'rslkrkmz') {
+            user = await prisma.user.findUnique({
+              where: {
+                email: 'admin@inciotoyedekparca.com'
+              }
+            })
           }
-        })
+        }
 
         if (!user || !user.isActive) {
           throw new Error('Kullanıcı bulunamadı veya aktif değil')
@@ -61,6 +79,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.role = user.role
         token.id = user.id
+        token.name = user.name
+        token.email = user.email
       }
       return token
     },
@@ -68,6 +88,8 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user.id = token.id as string
         session.user.role = token.role as string
+        session.user.name = token.name as string
+        session.user.email = token.email as string
       }
       return session
     },

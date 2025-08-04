@@ -6,7 +6,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -19,7 +19,7 @@ export default function AdminLogin() {
 
     try {
       const result = await signIn('credentials', {
-        email,
+        username,
         password,
         redirect: false,
       })
@@ -74,17 +74,17 @@ export default function AdminLogin() {
               )}
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                  E-posta Adresi
+                <label htmlFor="username" className="block text-sm font-medium text-white mb-2">
+                  Kullanıcı Adı / E-posta
                 </label>
                 <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent backdrop-blur-sm"
-                  placeholder="admin@inciotoyedekparca.com"
+                  placeholder="Kullanıcı adı veya e-posta adresinizi girin"
                 />
               </div>
 
