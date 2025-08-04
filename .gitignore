@@ -1,3 +1,5 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # Dependencies
 node_modules/
 /.pnp
@@ -44,6 +46,7 @@ yarn-error.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+*.pem
 
 # Temporary
 *.tmp
